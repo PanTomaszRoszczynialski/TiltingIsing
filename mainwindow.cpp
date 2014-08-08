@@ -10,15 +10,16 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 void MainWindow::whyNoTest(){
-    QImage img(100,100,QImage::Format_Mono);
-    for(int i = 0; i<100; ++i){
-        for(int j =0; j<100; ++j){
+    QImage img(w,h,QImage::Format_Mono);
+    for(int i = 0; i<w; ++i){
+        for(int j =0; j<h; ++j){
             lol(i,j) = rand()%256;
             img.setPixel(i,j,rand()%2);
         }
     }
     ui->textEdit->append(QString::number(lol(10,10)));
     ui->label->setPixmap(QPixmap::fromImage(img));
+    ui->label->setScaledContents(true);
 
 }
 

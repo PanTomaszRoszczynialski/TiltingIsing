@@ -12,8 +12,8 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
-    ArrayXXi lol=ArrayXXi(100,100);
+    const int w = 350,h = 350;
+    ArrayXXi lol=ArrayXXi(w,h);
 
 public:
     explicit MainWindow(QWidget *parent = 0);
