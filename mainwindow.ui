@@ -37,19 +37,19 @@
        </size>
       </property>
       <property name="title">
-       <string>GroupBox</string>
+       <string>boze ile opcji</string>
       </property>
       <widget class="QTextEdit" name="textEdit">
        <property name="geometry">
         <rect>
          <x>13</x>
-         <y>30</y>
+         <y>23</y>
          <width>201</width>
-         <height>64</height>
+         <height>71</height>
         </rect>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="rebootIsingButton">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -64,7 +64,7 @@ THE
 ISING</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="toggleTiltButton">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -91,7 +91,7 @@ TILT</string>
        <property name="title">
         <string>Stala Sprzezenia</string>
        </property>
-       <widget class="QPlainTextEdit" name="plainTextEdit">
+       <widget class="QPlainTextEdit" name="couplingText">
         <property name="geometry">
          <rect>
           <x>70</x>
@@ -103,10 +103,12 @@ TILT</string>
         <property name="font">
          <font>
           <pointsize>16</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
        </widget>
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QPushButton" name="couplingMinusButton">
         <property name="geometry">
          <rect>
           <x>120</x>
@@ -119,7 +121,7 @@ TILT</string>
          <string>MIN</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="pushButton_4">
+       <widget class="QPushButton" name="couplingPlusButton">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -145,7 +147,7 @@ TILT</string>
        <property name="title">
         <string>Temperatura</string>
        </property>
-       <widget class="QPlainTextEdit" name="plainTextEdit_2">
+       <widget class="QPlainTextEdit" name="heatText">
         <property name="geometry">
          <rect>
           <x>70</x>
@@ -157,10 +159,12 @@ TILT</string>
         <property name="font">
          <font>
           <pointsize>16</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
        </widget>
-       <widget class="QPushButton" name="pushButton_5">
+       <widget class="QPushButton" name="heatMinusButton">
         <property name="geometry">
          <rect>
           <x>120</x>
@@ -173,7 +177,7 @@ TILT</string>
          <string>MIN</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="pushButton_6">
+       <widget class="QPushButton" name="heatPlusButton">
         <property name="geometry">
          <rect>
           <x>10</x>
@@ -190,6 +194,9 @@ TILT</string>
      </widget>
     </item>
    </layout>
+   <zorder>horizontalLayoutWidget</zorder>
+   <zorder>groupBox</zorder>
+   <zorder>label</zorder>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
