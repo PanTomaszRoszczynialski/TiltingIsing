@@ -6,6 +6,10 @@
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
+#include <QGraphicsItem>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+
 using namespace Eigen;
 
 namespace Ui {
@@ -15,11 +19,14 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    const int w = 300, h = 300;
+    const int w = 300, h = 300, k =1;
 // + TUTAJ DEFINIUJE SIE ROZDZIELCZOSC
     typedef MatrixXi MyMatrix;
     MyMatrix spinTable, neighTable, tempForShifting;
     QRgb valA, valB;
+    QImage imgMono;
+    QGraphicsScene *scene;
+    QGraphicsPixmapItem *it;
 
     void initSpinTable();
     void initNeighBors();
@@ -33,6 +40,9 @@ public:
 
     void whyNoTest();
     ~MainWindow();
+public slots:
+    void shiftSomeRows();
+
 
 private:
     Ui::MainWindow *ui;

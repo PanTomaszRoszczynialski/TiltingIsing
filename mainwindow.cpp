@@ -9,7 +9,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     spinTable = MyMatrix(w,h);
     neighTable = MyMatrix(w,h);
+    tempForShifting = MyMatrix(w,h);
+    imgMono = QImage(w,h,QImage::Format_Mono);
+
     whyNoTest();
+
+    scene = new QGraphicsScene(this);
+    ui->graphicsView->setScene(scene);
+    it = scene->addPixmap(QPixmap::fromImage(imgMono));
 }
 
 void MainWindow::whyNoTest(){
@@ -20,16 +27,21 @@ void MainWindow::whyNoTest(){
     }
     valA = qRgb(30,22,77);
     valB = qRgb(44,144,44);
-    testRows();
-    QImage imgMono(w,h,QImage::Format_Mono);
-    QImage img(w,h,QImage::Format_RGB16);
+//    testRows();
+
     eigenToQImage(spinTable,imgMono);
     //t = Translation<int,2>(1,0);
+
+
+    timerTest->start(1000/30);
+    QObject::connect(timerTest,SIGNAL(timeout()),
+                     this,SLOT(shiftSomeRows()));
 
     ui->textEdit->append(QString::number(spinTable(10,10)));
     ui->textEdit->append(QString::number(w));
     ui->label->setPixmap(QPixmap::fromImage(imgMono));
-    ui->label->setScaledContents(false);
+    ui->label->setScaledContents(true);
+
 
 }
 
@@ -64,6 +76,7 @@ void MainWindow::eigenToQImage(const MyMatrix &arr, QImage & img){
             img.setPixel(i,j,spinTable(i,j));
         }
     }
+    ui->label->setPixmap(QPixmap::fromImage(img));
 }
 
 void MainWindow::eigenToQImageRGB(const MyMatrix &arr, QImage & img){
@@ -80,6 +93,16 @@ void MainWindow::eigenToQImageRGBC(const MyMatrix &arr, QImage & img){
             img.setPixel(i,j,qRgb(arr(i,j),33,44));
         }
     }
+}
+
+void MainWindow::shiftSomeRows(){
+    int rest = w - k;
+    tempForShifting.bottomRows(k) = spinTable.topRows(k);
+    spinTable.topRows(rest) = spinTable.bottomRows(rest);
+    spinTable.bottomRows(k) = tempForShifting.bottomRows(k);
+    eigenToQImage(spinTable,imgMono);
+
+
 }
 
 void MainWindow::testRows(){
