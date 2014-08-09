@@ -27,6 +27,7 @@ class MainWindow : public QMainWindow
     void eigenToQImageRGB(const MyMatrix&, QImage&);
     void eigenToQImageRGBC(const MyMatrix&, QImage&);
     void testRows();
+    void shiftSomeRows();
 
 public:
     explicit MainWindow(QWidget *parent = 0);

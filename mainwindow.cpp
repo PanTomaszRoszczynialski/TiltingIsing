@@ -7,6 +7,8 @@ MainWindow::MainWindow(QWidget *parent) :
     timerTest(new QTimer)
 {
     ui->setupUi(this);
+    spinTable = MyMatrix(w,h);
+    neighTable = MyMatrix(w,h);
     whyNoTest();
 }
 
@@ -16,12 +18,18 @@ void MainWindow::whyNoTest(){
             spinTable(i,j) = rand()%2;
         }
     }
-    QImage img(w,h,QImage::Format_Mono);
-    eigenToQImage(spinTable,img);
+    valA = qRgb(30,22,77);
+    valB = qRgb(44,144,44);
+    testRows();
+    QImage imgMono(w,h,QImage::Format_Mono);
+    QImage img(w,h,QImage::Format_RGB16);
+    eigenToQImage(spinTable,imgMono);
+    //t = Translation<int,2>(1,0);
 
     ui->textEdit->append(QString::number(spinTable(10,10)));
-    ui->label->setPixmap(QPixmap::fromImage(img));
-    ui->label->setScaledContents(true);
+    ui->textEdit->append(QString::number(w));
+    ui->label->setPixmap(QPixmap::fromImage(imgMono));
+    ui->label->setScaledContents(false);
 
 }
 
@@ -50,7 +58,7 @@ void MainWindow::initNeighBors(){
     }
 }
 
-void MainWindow::eigenToQImage(const ArrayXXi & arr, QImage & img){
+void MainWindow::eigenToQImage(const MyMatrix &arr, QImage & img){
     for (int i = 0; i < arr.rows(); ++i){
         for (int j = 0;j < arr.cols(); ++j){
             img.setPixel(i,j,spinTable(i,j));
@@ -58,6 +66,28 @@ void MainWindow::eigenToQImage(const ArrayXXi & arr, QImage & img){
     }
 }
 
+void MainWindow::eigenToQImageRGB(const MyMatrix &arr, QImage & img){
+    for (int i = 0; i < arr.rows(); ++i){
+        for (int j = 0;j < arr.cols(); ++j){
+            spinTable(i,j) ? img.setPixel(i,j,valA) : img.setPixel(i,j,valB);
+        }
+    }
+}
+
+void MainWindow::eigenToQImageRGBC(const MyMatrix &arr, QImage & img){
+    for (int i = 0; i < arr.rows(); ++i){
+        for (int j = 0;j < arr.cols(); ++j){
+            img.setPixel(i,j,qRgb(arr(i,j),33,44));
+        }
+    }
+}
+
+void MainWindow::testRows(){
+    for (int i = 0; i < spinTable.rows(); ++i){
+        spinTable.row(i) = spinTable.row(50);
+    }
+//    spinTable.leftCols(145) = spinTable.rightCols(145);
+}
 
 MainWindow::~MainWindow()
 {
