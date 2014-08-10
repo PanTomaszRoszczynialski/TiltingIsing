@@ -6,9 +6,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     timerTest(new QTimer),
     shiftingTimer(new QTimer),
-    J(double(4.0)),
+    J(double(2.0)),
     T(double(1.5)),
-    k(int(-1))
+    k(int(1)),
+    tiltSensor(new QTiltSensor)
 {
     ui->setupUi(this);
     spinTable = MyMatrix(w,h);
@@ -29,17 +30,23 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::initEverything(){
     initSpinTable();
     initNeighBors();
+
+    // inicjalizacja map
+    initTiltMap();
     calcProbabilities();
 
     initButtons();
+    tiltSensor->start();
+
+
+
+    QObject::connect(shiftingTimer,SIGNAL(timeout()),
+                     this,SLOT(shiftSomeRows()));
+    shiftingTimer->start(1000);
 
     QObject::connect(timerTest,SIGNAL(timeout()),
                      this,SLOT(initFlipMaybe()));
     timerTest->start(25);
-
-    QObject::connect(shiftingTimer,SIGNAL(timeout()),
-                     this,SLOT(shiftSomeRows()));
-    shiftingTimer->start(155);
 }
 
 void MainWindow::initButtons(){
@@ -88,7 +95,6 @@ void MainWindow::initFlipMaybe(){
     }
     initNeighBors();
     eigenToQImage(spinTable,imgMono);
-    ui->textEdit->setText(QString::number(boltzmanMap[1]));
 }
 
 
@@ -177,22 +183,31 @@ void MainWindow::eigenToQImageRGBC(const MyMatrix &arr, QImage & img){
 }
 
 void MainWindow::shiftSomeRows(){
-    if (!k) return;
-    if (k > 0){
+    rotY = tiltSensor->reading()->yRotation();
+    shiftingTimer->setInterval(tiltMap[abs(rotY)]);
+    rotX = rotX/10;
+    if (!rotY) return;
+    if (rotY < 0){
         rest = w - k;
         tempForShifting.bottomRows(k) = neighTable.topRows(k);
         neighTable.topRows(rest) = neighTable.bottomRows(rest);
         neighTable.bottomRows(k) = tempForShifting.bottomRows(k);
     }
-    if (k < 0){
-        rest = w + k;
+    if (rotY > 0){
+        rest = w - k;
         tempForShifting.bottomRows(rest) = neighTable.topRows(rest);
-        neighTable.topRows(-k) = neighTable.bottomRows(-k);
+        neighTable.topRows(k) = neighTable.bottomRows(k);
         neighTable.bottomRows(rest) = tempForShifting.bottomRows(rest);
     }
-    ui->textEdit->append(QString("Rest: %1\nk: %2").arg(rest).arg(k));
+    ui->textEdit->setText(QString::number(rotY));
 
 
+}
+void MainWindow::initTiltMap(){
+    tiltMap[0] = 500;
+    for (int i = 1; i < 91; ++i){
+        tiltMap[i] = 200 - (i*190)/90;
+    }
 }
 
 MainWindow::~MainWindow()

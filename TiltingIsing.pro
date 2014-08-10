@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += sensors
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,4 +26,9 @@ FORMS    += mainwindow.ui
 
 CONFIG += mobility
 MOBILITY = 
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+OTHER_FILES += \
+    android/AndroidManifest.xml
 

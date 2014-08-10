@@ -5,6 +5,8 @@
 #include <QTimer>
 #include <QMap>
 
+#include <QtSensors/QTiltSensor>
+
 #include <Eigen/Core>
 #include <Eigen/Dense>
 
@@ -17,7 +19,7 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    const int w = 250, h = 250;
+    const int w = 200, h = 200;
     int rest;
 
 // + TUTAJ DEFINIUJE SIE ROZDZIELCZOSC
@@ -26,6 +28,7 @@ class MainWindow : public QMainWindow
     QRgb valA, valB;
     QImage imgMono, imgRGB;
     QMap <int, double> boltzmanMap;
+    QMap <int, int> tiltMap;
 
     void initEverything();
 
@@ -35,6 +38,8 @@ class MainWindow : public QMainWindow
     void eigenToQImage(const MyMatrix&, QImage&);
     void eigenToQImageRGB(const MyMatrix&, QImage&);
     void eigenToQImageRGBC(const MyMatrix&, QImage&);
+
+    void initTiltMap();
     void calcProbabilities();
 
 public:
@@ -58,6 +63,8 @@ private:
     QTimer *shiftingTimer;
     double J,T;
     int k;
+    QTiltSensor *tiltSensor;
+    int rotX, rotY;
 
 };
 
