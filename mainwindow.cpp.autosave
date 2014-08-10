@@ -102,12 +102,6 @@ void MainWindow::shiftSomeRows(){
 
 }
 
-void MainWindow::testRows(){
-    for (int i = 0; i < spinTable.rows(); ++i){
-        spinTable.row(i) = spinTable.row(50);
-    }
-//    spinTable.leftCols(145) = spinTable.rightCols(145);
-}
 
 MainWindow::~MainWindow()
 {

@@ -32,7 +32,6 @@ class MainWindow : public QMainWindow
     void eigenToQImage(const MyMatrix&, QImage&);
     void eigenToQImageRGB(const MyMatrix&, QImage&);
     void eigenToQImageRGBC(const MyMatrix&, QImage&);
-    void testRows();
 
 public:
     explicit MainWindow(QWidget *parent = 0);
