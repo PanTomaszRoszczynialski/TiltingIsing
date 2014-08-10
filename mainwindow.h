@@ -30,6 +30,7 @@ class MainWindow : public QMainWindow
 
     void initSpinTable();
     void initNeighBors();
+    void initButtons();
 
     void eigenToQImage(const MyMatrix&, QImage&);
     void eigenToQImageRGB(const MyMatrix&, QImage&);
@@ -45,6 +46,10 @@ public slots:
     void shiftSomeRows();
     void initFlipMaybe();
 
+    void increaseHeat();
+    void decreaseHeat();
+    void increaseCoupling();
+    void decreaceCoupling();
 
 private:
     Ui::MainWindow *ui;

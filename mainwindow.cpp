@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     timerTest(new QTimer),
     shiftingTimer(new QTimer),
-    J(double(1.0)),
+    J(double(4.0)),
     T(double(1.5))
 {
     ui->setupUi(this);
@@ -30,6 +30,8 @@ void MainWindow::initEverything(){
     initNeighBors();
     calcProbabilities();
 
+    initButtons();
+
     QObject::connect(timerTest,SIGNAL(timeout()),
                      this,SLOT(initFlipMaybe()));
     timerTest->start(25);
@@ -39,12 +41,45 @@ void MainWindow::initEverything(){
     shiftingTimer->start(75);
 }
 
+void MainWindow::initButtons(){
+    QObject::connect(ui->heatMinusButton,SIGNAL(clicked()),
+                     this,SLOT(decreaseHeat()));
+    QObject::connect(ui->heatPlusButton,SIGNAL(clicked()),
+                     this,SLOT(increaseHeat()));
+    QObject::connect(ui->couplingMinusButton,SIGNAL(clicked()),
+                     this,SLOT(decreaceCoupling()));
+    QObject::connect(ui->couplingPlusButton,SIGNAL(clicked()),
+                     this,SLOT(increaseCoupling()));
+}
+
+void MainWindow::decreaseHeat(){
+    T = T - 0.1;
+    ui->heatLCD->display(T);
+    calcProbabilities();
+}
+void MainWindow::increaseHeat(){
+    T = T + 0.1;
+    ui->heatLCD->display(T);
+    calcProbabilities();
+}
+void MainWindow::decreaceCoupling(){
+    J = J - 0.1;
+    ui->couplingLCD->display(J);
+    calcProbabilities();
+}
+void MainWindow::increaseCoupling(){
+    J = J + 0.1;
+    ui->couplingLCD->display(J);
+    calcProbabilities();
+}
+
+
 void MainWindow::initFlipMaybe(){
 
     for(int i = 0; i < h; ++i){
         for(int j = 0; j < w; ++j){
             spinTable(i,j) =
-            (boltzmanMap[neighTable(i,j)] > (rand()%400)*0.01) ?
+            (boltzmanMap[neighTable(i,j)] > (rand()%500)*0.01) ?
                         abs(spinTable(i,j)-1) : spinTable(i,j);
         }
     }
