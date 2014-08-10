@@ -17,7 +17,8 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    const int w = 150, h = 150, k =1;
+    const int w = 250, h = 250;
+    int rest;
 
 // + TUTAJ DEFINIUJE SIE ROZDZIELCZOSC
     typedef MatrixXi MyMatrix;
@@ -28,7 +29,6 @@ class MainWindow : public QMainWindow
 
     void initEverything();
 
-    void initSpinTable();
     void initNeighBors();
     void initButtons();
 
@@ -45,6 +45,7 @@ public:
 public slots:
     void shiftSomeRows();
     void initFlipMaybe();
+    void initSpinTable();
 
     void increaseHeat();
     void decreaseHeat();
@@ -56,6 +57,7 @@ private:
     QTimer *timerTest;
     QTimer *shiftingTimer;
     double J,T;
+    int k;
 
 };
 

@@ -7,7 +7,8 @@ MainWindow::MainWindow(QWidget *parent) :
     timerTest(new QTimer),
     shiftingTimer(new QTimer),
     J(double(4.0)),
-    T(double(1.5))
+    T(double(1.5)),
+    k(int(-1))
 {
     ui->setupUi(this);
     spinTable = MyMatrix(w,h);
@@ -38,7 +39,7 @@ void MainWindow::initEverything(){
 
     QObject::connect(shiftingTimer,SIGNAL(timeout()),
                      this,SLOT(shiftSomeRows()));
-    shiftingTimer->start(75);
+    shiftingTimer->start(155);
 }
 
 void MainWindow::initButtons(){
@@ -50,6 +51,8 @@ void MainWindow::initButtons(){
                      this,SLOT(decreaceCoupling()));
     QObject::connect(ui->couplingPlusButton,SIGNAL(clicked()),
                      this,SLOT(increaseCoupling()));
+    QObject::connect(ui->rebootIsingButton,SIGNAL(clicked()),
+                     this,SLOT(initSpinTable()));
 }
 
 void MainWindow::decreaseHeat(){
@@ -76,8 +79,8 @@ void MainWindow::increaseCoupling(){
 
 void MainWindow::initFlipMaybe(){
 
-    for(int i = 0; i < h; ++i){
-        for(int j = 0; j < w; ++j){
+    for(int i = 0; i < w; ++i){
+        for(int j = 0; j < h; ++j){
             spinTable(i,j) =
             (boltzmanMap[neighTable(i,j)] > (rand()%500)*0.01) ?
                         abs(spinTable(i,j)-1) : spinTable(i,j);
@@ -85,7 +88,7 @@ void MainWindow::initFlipMaybe(){
     }
     initNeighBors();
     eigenToQImage(spinTable,imgMono);
-    ui->textEdit->setText(QString::number(boltzmanMap[0]));
+    ui->textEdit->setText(QString::number(boltzmanMap[1]));
 }
 
 
@@ -126,12 +129,12 @@ void MainWindow::initSpinTable(){
 void MainWindow::initNeighBors(){
     //scisle rzecz biora w tej macierzy sa sumy spinow
     //sasiednich pol przemnozone przez rozwazany spin
-    for(int i = 0; i < h; ++i){
-        for(int j = 0; j < w; ++j){
-            int iNext = i==h-1 ? 0 : i+1;
-            int iPrev = i==0 ? h-1 : i-1;
-            int jNext = j==w-1 ? 0 : j+1;
-            int jPrev = j==0 ? w-1 : j-1;
+    for(int i = 0; i < w; ++i){
+        for(int j = 0; j < h; ++j){
+            int iNext = i==w-1 ? 0 : i+1;
+            int iPrev = i==0 ? w-1 : i-1;
+            int jNext = j==h-1 ? 0 : j+1;
+            int jPrev = j==0 ? h-1 : j-1;
             // tutaj mozliwe wartosc to {-2,-1,0,1,2}
             neighTable(i,j) = 2*(spinTable(i,j)-0.5)*(spinTable(iNext,j)+
                                 spinTable(iPrev,j)+
@@ -174,10 +177,21 @@ void MainWindow::eigenToQImageRGBC(const MyMatrix &arr, QImage & img){
 }
 
 void MainWindow::shiftSomeRows(){
-    int rest = w - k;
-    tempForShifting.bottomRows(k) = neighTable.topRows(k);
-    neighTable.topRows(rest) = neighTable.bottomRows(rest);
-    neighTable.bottomRows(k) = tempForShifting.bottomRows(k);
+    if (!k) return;
+    if (k > 0){
+        rest = w - k;
+        tempForShifting.bottomRows(k) = neighTable.topRows(k);
+        neighTable.topRows(rest) = neighTable.bottomRows(rest);
+        neighTable.bottomRows(k) = tempForShifting.bottomRows(k);
+    }
+    if (k < 0){
+        rest = w + k;
+        tempForShifting.bottomRows(rest) = neighTable.topRows(rest);
+        neighTable.topRows(-k) = neighTable.bottomRows(-k);
+        neighTable.bottomRows(rest) = tempForShifting.bottomRows(rest);
+    }
+    ui->textEdit->append(QString("Rest: %1\nk: %2").arg(rest).arg(k));
+
 
 }
 
