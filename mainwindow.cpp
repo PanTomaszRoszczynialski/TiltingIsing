@@ -4,7 +4,10 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    timerTest(new QTimer)
+    timerTest(new QTimer),
+    shiftingTimer(new QTimer),
+    J(double(1.0)),
+    T(double(1.5))
 {
     ui->setupUi(this);
     spinTable = MyMatrix(w,h);
@@ -12,8 +15,45 @@ MainWindow::MainWindow(QWidget *parent) :
     tempForShifting = MyMatrix(w,h);
     imgMono = QImage(w,h,QImage::Format_Mono);
     imgRGB = QImage(w,h,QImage::Format_RGB32);
-    whyNoTest();
+    valA = qRgb(30,22,77);
+    valB = qRgb(44,144,44);
+    ui->label->setScaledContents(true);
+
+    initEverything();
+//    whyNoTest();
+    ui->heatLCD->display(T);
+    ui->couplingLCD->display(J);
 }
+
+void MainWindow::initEverything(){
+    initSpinTable();
+    initNeighBors();
+    calcProbabilities();
+
+    QObject::connect(timerTest,SIGNAL(timeout()),
+                     this,SLOT(initFlipMaybe()));
+    timerTest->start(25);
+
+    QObject::connect(shiftingTimer,SIGNAL(timeout()),
+                     this,SLOT(shiftSomeRows()));
+    shiftingTimer->start(75);
+}
+
+void MainWindow::initFlipMaybe(){
+
+    for(int i = 0; i < h; ++i){
+        for(int j = 0; j < w; ++j){
+            spinTable(i,j) =
+            (boltzmanMap[neighTable(i,j)] > (rand()%400)*0.01) ?
+                        abs(spinTable(i,j)-1) : spinTable(i,j);
+        }
+    }
+    initNeighBors();
+    eigenToQImage(spinTable,imgMono);
+    ui->textEdit->setText(QString::number(boltzmanMap[0]));
+}
+
+
 
 void MainWindow::whyNoTest(){
     for(int i = 0; i<w; ++i){
@@ -21,8 +61,7 @@ void MainWindow::whyNoTest(){
             spinTable(i,j) = rand()%2;
         }
     }
-    valA = qRgb(30,22,77);
-    valB = qRgb(44,144,44);
+
 //    testRows();
 
     eigenToQImage(spinTable,imgMono);
@@ -58,11 +97,19 @@ void MainWindow::initNeighBors(){
             int iPrev = i==0 ? h-1 : i-1;
             int jNext = j==w-1 ? 0 : j+1;
             int jPrev = j==0 ? w-1 : j-1;
+            // tutaj mozliwe wartosc to {-2,-1,0,1,2}
             neighTable(i,j) = 2*(spinTable(i,j)-0.5)*(spinTable(iNext,j)+
                                 spinTable(iPrev,j)+
-                                spinTable(i,jNext)+ //troloo
-                                spinTable(i,jPrev)-2)+2;
+                                spinTable(i,jNext)+
+                                spinTable(i,jPrev)-2);
         }
+    }
+}
+
+void MainWindow::calcProbabilities(){
+    for (int i = - 2; i < 3; ++i){
+        boltzmanMap[i] = exp(-4*(J*i)/T);
+
     }
 }
 
@@ -93,20 +140,10 @@ void MainWindow::eigenToQImageRGBC(const MyMatrix &arr, QImage & img){
 
 void MainWindow::shiftSomeRows(){
     int rest = w - k;
-    tempForShifting.bottomRows(k) = spinTable.topRows(k);
-    spinTable.topRows(rest) = spinTable.bottomRows(rest);
-    spinTable.bottomRows(k) = tempForShifting.bottomRows(k);
-    eigenToQImage(spinTable,imgMono);
-    eigenToQImageRGBC(spinTable,imgRGB);
+    tempForShifting.bottomRows(k) = neighTable.topRows(k);
+    neighTable.topRows(rest) = neighTable.bottomRows(rest);
+    neighTable.bottomRows(k) = tempForShifting.bottomRows(k);
 
-
-}
-
-void MainWindow::testRows(){
-    for (int i = 0; i < spinTable.rows(); ++i){
-        spinTable.row(i) = spinTable.row(50);
-    }
-//    spinTable.leftCols(145) = spinTable.rightCols(145);
 }
 
 MainWindow::~MainWindow()

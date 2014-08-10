@@ -3,13 +3,10 @@
 
 #include <QMainWindow>
 #include <QTimer>
+#include <QMap>
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
-#include <QGraphicsItem>
-#include <QGraphicsScene>
-#include <QGraphicsView>
-#include <QPainter>
 
 using namespace Eigen;
 
@@ -20,19 +17,24 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    const int w = 300, h = 300, k =1;
+    const int w = 150, h = 150, k =1;
+
 // + TUTAJ DEFINIUJE SIE ROZDZIELCZOSC
     typedef MatrixXi MyMatrix;
     MyMatrix spinTable, neighTable, tempForShifting;
     QRgb valA, valB;
     QImage imgMono, imgRGB;
+    QMap <int, double> boltzmanMap;
+
+    void initEverything();
 
     void initSpinTable();
     void initNeighBors();
+
     void eigenToQImage(const MyMatrix&, QImage&);
     void eigenToQImageRGB(const MyMatrix&, QImage&);
     void eigenToQImageRGBC(const MyMatrix&, QImage&);
-    void testRows();
+    void calcProbabilities();
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -41,11 +43,14 @@ public:
     ~MainWindow();
 public slots:
     void shiftSomeRows();
+    void initFlipMaybe();
 
 
 private:
     Ui::MainWindow *ui;
     QTimer *timerTest;
+    QTimer *shiftingTimer;
+    double J,T;
 
 };
 

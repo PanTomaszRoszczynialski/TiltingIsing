@@ -91,23 +91,6 @@ TILT</string>
        <property name="title">
         <string>Stala Sprzezenia</string>
        </property>
-       <widget class="QPlainTextEdit" name="couplingText">
-        <property name="geometry">
-         <rect>
-          <x>70</x>
-          <y>13</y>
-          <width>41</width>
-          <height>61</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-       </widget>
        <widget class="QPushButton" name="couplingMinusButton">
         <property name="geometry">
          <rect>
@@ -134,6 +117,22 @@ TILT</string>
          <string>PLUS</string>
         </property>
        </widget>
+       <widget class="QLCDNumber" name="couplingLCD">
+        <property name="geometry">
+         <rect>
+          <x>60</x>
+          <y>20</y>
+          <width>61</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="smallDecimalPoint">
+         <bool>true</bool>
+        </property>
+        <property name="digitCount">
+         <number>3</number>
+        </property>
+       </widget>
       </widget>
       <widget class="QGroupBox" name="groupBox_3">
        <property name="geometry">
@@ -147,23 +146,6 @@ TILT</string>
        <property name="title">
         <string>Temperatura</string>
        </property>
-       <widget class="QPlainTextEdit" name="heatText">
-        <property name="geometry">
-         <rect>
-          <x>70</x>
-          <y>13</y>
-          <width>41</width>
-          <height>61</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-       </widget>
        <widget class="QPushButton" name="heatMinusButton">
         <property name="geometry">
          <rect>
@@ -188,6 +170,29 @@ TILT</string>
         </property>
         <property name="text">
          <string>PLUS</string>
+        </property>
+       </widget>
+       <widget class="QLCDNumber" name="heatLCD">
+        <property name="geometry">
+         <rect>
+          <x>60</x>
+          <y>20</y>
+          <width>61</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="smallDecimalPoint">
+         <bool>true</bool>
+        </property>
+        <property name="digitCount">
+         <number>3</number>
         </property>
        </widget>
       </widget>
