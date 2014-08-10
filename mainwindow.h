@@ -19,7 +19,7 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    const int w = 200, h = 200;
+    const int w = 220, h = 220;
     int rest;
 
 // + TUTAJ DEFINIUJE SIE ROZDZIELCZOSC
@@ -49,6 +49,7 @@ public:
     ~MainWindow();
 public slots:
     void shiftSomeRows();
+    void shiftSomeCols();
     void initFlipMaybe();
     void initSpinTable();
 
@@ -60,7 +61,8 @@ public slots:
 private:
     Ui::MainWindow *ui;
     QTimer *timerTest;
-    QTimer *shiftingTimer;
+    QTimer *shiftingTimerRows;
+    QTimer *shiftingTimerCols;
     double J,T;
     int k;
     QTiltSensor *tiltSensor;

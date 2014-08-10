@@ -5,7 +5,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     timerTest(new QTimer),
-    shiftingTimer(new QTimer),
+    shiftingTimerRows(new QTimer),
+    shiftingTimerCols(new QTimer),
     J(double(2.0)),
     T(double(1.5)),
     k(int(1)),
@@ -39,11 +40,15 @@ void MainWindow::initEverything(){
     tiltSensor->start();
 
 
-
-    QObject::connect(shiftingTimer,SIGNAL(timeout()),
+    // uruchomienie timerow synchronizujacych TILT
+    QObject::connect(shiftingTimerRows,SIGNAL(timeout()),
                      this,SLOT(shiftSomeRows()));
-    shiftingTimer->start(1000);
+    shiftingTimerRows->start(1000);
+    QObject::connect(shiftingTimerCols,SIGNAL(timeout()),
+                     this,SLOT(shiftSomeCols()));
+    shiftingTimerCols->start(1000);
 
+    // Glowny timer animujacy
     QObject::connect(timerTest,SIGNAL(timeout()),
                      this,SLOT(initFlipMaybe()));
     timerTest->start(25);
@@ -89,7 +94,7 @@ void MainWindow::initFlipMaybe(){
     for(int i = 0; i < w; ++i){
         for(int j = 0; j < h; ++j){
             spinTable(i,j) =
-            (boltzmanMap[neighTable(i,j)] > (rand()%500)*0.01) ?
+            (boltzmanMap[neighTable(i,j)] > (rand()%300)*0.01) ?
                         abs(spinTable(i,j)-1) : spinTable(i,j);
         }
     }
@@ -152,7 +157,7 @@ void MainWindow::initNeighBors(){
 
 void MainWindow::calcProbabilities(){
     for (int i = - 2; i < 3; ++i){
-        boltzmanMap[i] = exp(-4*(J*i)/T);
+        boltzmanMap[i] = exp(-4.0*(J*double(i)/T));
 
     }
 }
@@ -184,8 +189,7 @@ void MainWindow::eigenToQImageRGBC(const MyMatrix &arr, QImage & img){
 
 void MainWindow::shiftSomeRows(){
     rotY = tiltSensor->reading()->yRotation();
-    shiftingTimer->setInterval(tiltMap[abs(rotY)]);
-    rotX = rotX/10;
+    shiftingTimerRows->setInterval(tiltMap[abs(rotY)]);
     if (!rotY) return;
     if (rotY < 0){
         rest = w - k;
@@ -199,14 +203,32 @@ void MainWindow::shiftSomeRows(){
         neighTable.topRows(k) = neighTable.bottomRows(k);
         neighTable.bottomRows(rest) = tempForShifting.bottomRows(rest);
     }
-    ui->textEdit->setText(QString::number(rotY));
+}
+void MainWindow::shiftSomeCols(){
 
+    rotX = tiltSensor->reading()->xRotation();
+    shiftingTimerCols->setInterval(tiltMap[abs(rotX)]);
+    if (!rotX) return;
+    if (rotX < 0){
+        rest = h - k;
+        tempForShifting.rightCols(k) = neighTable.leftCols(k);
+        neighTable.leftCols(rest) = neighTable.rightCols(rest);
+        neighTable.rightCols(k) = tempForShifting.rightCols(k);
+    }
+    if (rotX > 0){
+        rest = h - k;
+        tempForShifting.rightCols(rest) = neighTable.leftCols(rest);
+        neighTable.leftCols(k) = neighTable.rightCols(k);
+        neighTable.rightCols(rest) = tempForShifting.rightCols(rest);
+    }
+    ui->textEdit->setText(QString::number(rotX));
 
 }
+
 void MainWindow::initTiltMap(){
     tiltMap[0] = 500;
     for (int i = 1; i < 91; ++i){
-        tiltMap[i] = 200 - (i*190)/90;
+        tiltMap[i] = 310 - (i*240)/90;
     }
 }
 
