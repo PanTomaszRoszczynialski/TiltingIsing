@@ -1,9 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QTimer>
 #include <QMap>
+#include <QTimer>
+#include <QMainWindow>
 
 #include <QtSensors/QTiltSensor>
 
@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow
     const int w = 220, h = 220;
     int rest;
 
-// + TUTAJ DEFINIUJE SIE ROZDZIELCZOSC
+    // + TUTAJ DEFINIUJE SIE ROZDZIELCZOSC
     typedef MatrixXi MyMatrix;
     MyMatrix spinTable, neighTable, tempForShifting;
     QRgb valA, valB;

@@ -28,7 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->couplingLCD->display(J);
 }
 
-void MainWindow::initEverything(){
+void MainWindow::initEverything()
+{
     initSpinTable();
     initNeighBors();
 
@@ -54,7 +55,8 @@ void MainWindow::initEverything(){
     timerTest->start(25);
 }
 
-void MainWindow::initButtons(){
+void MainWindow::initButtons()
+{
     QObject::connect(ui->heatMinusButton,SIGNAL(clicked()),
                      this,SLOT(decreaseHeat()));
     QObject::connect(ui->heatPlusButton,SIGNAL(clicked()),
@@ -67,31 +69,37 @@ void MainWindow::initButtons(){
                      this,SLOT(initSpinTable()));
 }
 
-void MainWindow::decreaseHeat(){
+void MainWindow::decreaseHeat()
+{
     T = T - 0.1;
     ui->heatLCD->display(T);
     calcProbabilities();
 }
-void MainWindow::increaseHeat(){
+
+void MainWindow::increaseHeat()
+{
     T = T + 0.1;
     ui->heatLCD->display(T);
     calcProbabilities();
 }
-void MainWindow::decreaceCoupling(){
+
+void MainWindow::decreaceCoupling()
+{
     J = J - 0.1;
     ui->couplingLCD->display(J);
     calcProbabilities();
 }
-void MainWindow::increaseCoupling(){
+
+void MainWindow::increaseCoupling()
+{
     J = J + 0.1;
     ui->couplingLCD->display(J);
     calcProbabilities();
 }
 
-
-void MainWindow::initFlipMaybe(){
-
-    for(int i = 0; i < w; ++i){
+void MainWindow::initFlipMaybe()
+{
+    for(int i = 0; i < w; ++i) {
         for(int j = 0; j < h; ++j){
             spinTable(i,j) =
             (boltzmanMap[neighTable(i,j)] > (rand()%300)*0.01) ?
@@ -102,9 +110,8 @@ void MainWindow::initFlipMaybe(){
     eigenToQImage(spinTable,imgMono);
 }
 
-
-
-void MainWindow::whyNoTest(){
+void MainWindow::whyNoTest()
+{
     for(int i = 0; i<w; ++i){
         for(int j =0; j<h; ++j){
             spinTable(i,j) = rand()%2;
@@ -129,7 +136,8 @@ void MainWindow::whyNoTest(){
 
 }
 
-void MainWindow::initSpinTable(){
+void MainWindow::initSpinTable()
+{
     for(int i = 0; i<w; ++i){
         for(int j =0; j<h; ++j){
             spinTable(i,j) = rand()%2;
@@ -137,7 +145,8 @@ void MainWindow::initSpinTable(){
     }
 }
 
-void MainWindow::initNeighBors(){
+void MainWindow::initNeighBors()
+{
     //scisle rzecz biora w tej macierzy sa sumy spinow
     //sasiednich pol przemnozone przez rozwazany spin
     for(int i = 0; i < w; ++i){
@@ -155,14 +164,16 @@ void MainWindow::initNeighBors(){
     }
 }
 
-void MainWindow::calcProbabilities(){
+void MainWindow::calcProbabilities()
+{
     for (int i = - 2; i < 3; ++i){
         boltzmanMap[i] = exp(-4.0*(J*double(i)/T));
 
     }
 }
 
-void MainWindow::eigenToQImage(const MyMatrix &arr, QImage & img){
+void MainWindow::eigenToQImage(const MyMatrix &arr, QImage & img)
+{
     for (int i = 0; i < arr.rows(); ++i){
         for (int j = 0;j < arr.cols(); ++j){
             img.setPixel(i,j,spinTable(i,j));
@@ -171,7 +182,8 @@ void MainWindow::eigenToQImage(const MyMatrix &arr, QImage & img){
     ui->label->setPixmap(QPixmap::fromImage(img));
 }
 
-void MainWindow::eigenToQImageRGB(const MyMatrix &arr, QImage & img){
+void MainWindow::eigenToQImageRGB(const MyMatrix &arr, QImage & img)
+{
     for (int i = 0; i < arr.rows(); ++i){
         for (int j = 0;j < arr.cols(); ++j){
             spinTable(i,j) ? img.setPixel(i,j,valA) : img.setPixel(i,j,valB);
@@ -179,7 +191,8 @@ void MainWindow::eigenToQImageRGB(const MyMatrix &arr, QImage & img){
     }
 }
 
-void MainWindow::eigenToQImageRGBC(const MyMatrix &arr, QImage & img){
+void MainWindow::eigenToQImageRGBC(const MyMatrix &arr, QImage & img)
+{
     for (int i = 0; i < arr.rows(); ++i){
         for (int j = 0;j < arr.cols(); ++j){
             img.setPixel(i,j,qRgb(arr(i,j)*(rand()%255),33,44));
@@ -187,7 +200,8 @@ void MainWindow::eigenToQImageRGBC(const MyMatrix &arr, QImage & img){
     }
 }
 
-void MainWindow::shiftSomeRows(){
+void MainWindow::shiftSomeRows()
+{
     rotY = tiltSensor->reading()->yRotation();
     shiftingTimerRows->setInterval(tiltMap[abs(rotY)]);
     if (!rotY) return;
@@ -204,8 +218,9 @@ void MainWindow::shiftSomeRows(){
         neighTable.bottomRows(rest) = tempForShifting.bottomRows(rest);
     }
 }
-void MainWindow::shiftSomeCols(){
 
+void MainWindow::shiftSomeCols()
+{
     rotX = tiltSensor->reading()->xRotation();
     shiftingTimerCols->setInterval(tiltMap[abs(rotX)]);
     if (!rotX) return;
@@ -225,7 +240,8 @@ void MainWindow::shiftSomeCols(){
 
 }
 
-void MainWindow::initTiltMap(){
+void MainWindow::initTiltMap()
+{
     tiltMap[0] = 500;
     for (int i = 1; i < 91; ++i){
         tiltMap[i] = 310 - (i*240)/90;
